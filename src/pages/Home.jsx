@@ -1,7 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 
-export default function Home(){
+import React, { useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+
+export default function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Wait for DOM to be ready
+    const scrollToHash = () => {
+      if (location.hash) {
+        const id = location.hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    // Slight delay ensures element exists
+    const timeout = setTimeout(scrollToHash, 50);
+    return () => clearTimeout(timeout);
+  }, [location]);
   return (
     <div className="page home">
       <section className="hero card">
@@ -18,7 +39,7 @@ export default function Home(){
         </div>
       </section>
 
-      <section className="features">
+      <section className="features" id='features'>
         <div className="card feature-card">
           <img src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?w=300&h=200&fit=crop" alt="Artisan Coffee" className="feature-image" />
           <h3>☕ Artisan Coffee</h3>
@@ -41,7 +62,7 @@ export default function Home(){
         </div>
       </section>
 
-      <section className="info">
+      <section className="info" id='how-it-works'>
         <div className="info-content">
           <h2>How brew & co Works</h2>
           <div className="steps-wrapper">
