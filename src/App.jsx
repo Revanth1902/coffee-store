@@ -37,11 +37,19 @@ export default function App(){
      
       <nav className="nav">
   <Link to="/">Home</Link>
+  <Link to="/">Service</Link>
+<Link to="/">How it Works </Link>
+
+<Link to="/">Contact us</Link>
+
 
   {!user ? (
     <>
-      <Link to="/login" className="btn-nav">Login</Link>
+    <div>
+       <Link to="/login" className="btn-nav">Login</Link>
       <Link to="/register" className="btn-nav btn-primary">Register</Link>
+    </div>
+     
     </>
   ) : (
     <>

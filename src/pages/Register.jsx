@@ -1,28 +1,28 @@
-import React, { useState } from 'react'
+  import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "../styles/register.css"
+import { FaUser, FaCoffee } from "react-icons/fa" // icons for cards
 
 export default function Register() {
   const navigate = useNavigate()
-  const [step, setStep] = useState(1)
-
+  const [step, setStep] = useState(0) // Step 0 = role selection
+  const [role, setRole] = useState('')
   const [formData, setFormData] = useState({
-    // Step 1
+ 
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-    contactNumber: '',
+    dob: '',
     gender: '',
     maritalStatus: '',
 
-    // Step 2
     street: '',
     city: '',
     state: '',
     pincode: '',
 
-    // Step 3
+ 
     companyName: '',
     designation: '',
     startDate: '',
@@ -31,7 +31,6 @@ export default function Register() {
     currentlyWorking: false,
     reasonForLeaving: '',
 
-    // Step 4
     idType: '',
     idNumber: '',
     idDocument: null,
@@ -51,15 +50,13 @@ export default function Register() {
   }
 
   const nextStep = () => step < 4 && setStep(step + 1)
-  const prevStep = () => step > 1 && setStep(step - 1)
-
+  const prevStep = () => step > 0 && setStep(step - 1)
   const progressPercent = (step / 4) * 100
 
   return (
     <div className="register-page">
       <div className="register-card">
 
-        {/* HEADER */}
         <div className="register-header">
           <div className="logo">
             <img src="/logo.png" alt="logo" />
@@ -67,53 +64,90 @@ export default function Register() {
           </div>
         </div>
 
-        {/* PROGRESS BAR */}
-        <div className="progress-wrapper">
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${progressPercent}%` }}
-            />
+        
+        {step > 0 && (
+          <div className="progress-wrapper">
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
+            </div>
+            <span className="step-count">Step {step}/4</span>
           </div>
-          <span className="step-count">Step {step}/4</span>
-        </div>
+        )}
 
-        {/* STEP CONTENT */}
         <div className="form-content">
 
-          {step === 1 && (
+          {step === 0 && (
             <>
-              <h2>Personal Details</h2>
+              <h2>Select Your Role</h2>
+              <div className="role-selection">
+                <div
+                  className={`role-card ${role === 'customer' ? 'selected' : ''}`}
+                  onClick={() => setRole('customer')}
+                >
+                  <FaUser className="role-icon" />
+                  <h3>Customer</h3>
+                  <p>Order coffee and reserve tables easily.</p>
+                </div>
 
-              <div className="row">
-                <input name="firstName" placeholder="First Name" onChange={handleChange} />
-                <input name="lastName" placeholder="Last Name" onChange={handleChange} />
-              </div>
-
-              <input name="email" placeholder="Email" onChange={handleChange} />
-
-              <div className="row">
-                <input name="phone" placeholder="Phone" onChange={handleChange} />
-                <input name="contactNumber" placeholder="Contact Number" onChange={handleChange} />
-              </div>
-
-              <div className="row">
-                <select name="gender" onChange={handleChange}>
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-
-                <select name="maritalStatus" onChange={handleChange}>
-                  <option value="">Marital Status</option>
-                  <option value="single">Single</option>
-                  <option value="married">Married</option>
-                </select>
+                <div
+                  className={`role-card ${role === 'cafe_owner' ? 'selected' : ''}`}
+                  onClick={() => setRole('cafe_owner')}
+                >
+                  <FaCoffee className="role-icon" />
+                  <h3>Cafe Owner</h3>
+                  <p>Manage your cafe, menu, and orders efficiently.</p>
+                </div>
               </div>
             </>
           )}
 
-          {step === 2 && (
+      {step === 1 && (
+  <>
+    <h2>Personal Details</h2>
+
+    <div className="row">
+      <input name="firstName" placeholder="First Name" onChange={handleChange} />
+      <input name="lastName" placeholder="Last Name" onChange={handleChange} />
+    </div>
+
+    <input name="email" placeholder="Email" onChange={handleChange} />
+
+  <div className="row">
+  <input 
+    name="phone" 
+    placeholder="Phone" 
+    onChange={handleChange} 
+  />
+  <input 
+    type="text" 
+    name="dob" 
+    placeholder="Date of Birth (dd-mm-yyyy)"
+    onFocus={(e) => e.target.type = 'date'} 
+    onBlur={(e) => e.target.type = 'text'}  
+    onChange={handleChange} 
+  />
+</div>
+
+
+
+    <div className="row">
+      <select name="gender" onChange={handleChange}>
+        <option value="">Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <select name="maritalStatus" onChange={handleChange}>
+        <option value="">Marital Status</option>
+        <option value="single">Single</option>
+        <option value="married">Married</option>
+      </select>
+    </div>
+  </>
+)}
+
+
+             {step === 2 && (
             <>
               <h2>Address Details</h2>
 
@@ -182,13 +216,16 @@ export default function Register() {
 
         </div>
 
-        {/* ACTION BUTTONS */}
         <div className="form-actions">
-          <button onClick={prevStep} disabled={step === 1}>
+          <button onClick={prevStep} disabled={step === 0}>
             Back
           </button>
 
-          {step < 4 ? (
+          {step === 0 ? (
+            <button onClick={() => role && nextStep()} disabled={!role}>
+              Next
+            </button>
+          ) : step < 4 ? (
             <button onClick={nextStep}>Next</button>
           ) : (
             <button className="primary">Submit</button>
@@ -199,3 +236,7 @@ export default function Register() {
     </div>
   )
 }
+
+
+
+
